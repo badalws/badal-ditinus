@@ -38,6 +38,14 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6',
+        ]);
+        //if input is in incorrect format
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
         $credentials = $request->only('email', 'password');
 
         //Wrong Credentials
